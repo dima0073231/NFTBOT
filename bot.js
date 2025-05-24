@@ -6,6 +6,7 @@ console.log("Токен:", process.env.TELEGRAM_BOT_TOKEN);
 const commands = require('./commands.js');
 const events = require('./events.js');
 
+
 if (!process.env.TELEGRAM_BOT_TOKEN) {
     console.error("❌ Ошибка: TELEGRAM_BOT_TOKEN не найден!");
     process.exit(1);
