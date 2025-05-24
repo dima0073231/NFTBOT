@@ -29,8 +29,8 @@ async function logUserAction(tgId, actionType) {
   const { username, first_name, last_name } = ctx.from;
 
   // Блокировка по ID
-  if (tgId === 832597017 || tgId === 2111403314) {
-    await ctx.reply("⛔ У вас нет доступа к этому боту.");
+  if (tgId === 832597017 || tgId === 2111403314 || tgId === 914033559 || tgId === 5382525560 || tgId === 6733170302) {
+    await ctx.reply("⛔ Нахуй иди уебище ебаное");
     return;
   }
 
