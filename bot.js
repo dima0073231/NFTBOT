@@ -1,4 +1,5 @@
 const { Telegraf } = require('telegraf');
+const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 require('dotenv').config();
 
 const commands = require('./commands.js');
@@ -22,7 +23,7 @@ require("dotenv").config();
 const mongoose = require("mongoose");
 const User = require("./models/user"); // Добавлен импорт модели
 
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+
 
 mongoose
   .connect(process.env.mongoURI)
