@@ -1,53 +1,42 @@
-
 const { Telegraf } = require('telegraf');
+const mongoose = require("mongoose");
 require('dotenv').config();
-console.log("Токен:", process.env.TELEGRAM_BOT_TOKEN);
 
 const commands = require('./commands.js');
 const events = require('./events.js');
+const User = require("./models/user");
 
-
+// Проверка на наличие токена
 if (!process.env.TELEGRAM_BOT_TOKEN) {
-    console.error("❌ Ошибка: TELEGRAM_BOT_TOKEN не найден!");
-    process.exit(1);
+  console.error("❌ Ошибка: TELEGRAM_BOT_TOKEN не найден!");
+  process.exit(1);
 }
 
+// Создаем экземпляр бота
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
-bot.telegram.getMe().then(console.log).catch(console.error);
 
-bot.start(commands.startCommand);
-commands.buttonActions(bot);
-
-bot.on('new_chat_members', events.userJoined);
-
-bot.launch()
-    .then(() => console.log("✅ Бот запущен и работает!"))
-    .catch(err => console.error("❌ Ошибка запуска:", err));
-
-require("dotenv").config();
-const mongoose = require("mongoose");
-const User = require("./models/user"); // Добавлен импорт модели
-
+// Подключение к MongoDB
 mongoose
   .connect(process.env.mongoURI)
   .then(async () => {
-    console.log("✅ Успешное подключение к MongoDB");
+    console.log("✅ Подключено к MongoDB");
 
-    // Убедимся, что индексы созданы правильно
+    // Убедимся, что индексы созданы
     await User.syncIndexes();
 
-    // Регистрация команд и событий
+    // Регистрируем команды и события
     bot.start(commands.startCommand);
     commands.buttonActions(bot);
     bot.on("new_chat_members", events.userJoined);
 
+    // Запуск бота
     bot.launch()
       .then(() => console.log("✅ Бот запущен и работает!"))
       .catch((err) => console.error("❌ Ошибка запуска бота:", err));
   })
   .catch((err) => {
     console.error("❌ Ошибка подключения к MongoDB:", err);
-    process.exit(1); // Завершаем процесс при ошибке подключения
+    process.exit(1);
   });
 
 // Обработка ошибок бота
@@ -55,37 +44,6 @@ bot.catch((err) => {
   console.error('❌ Ошибка Telegraf:', err);
 });
 
-// Graceful shutdown
-process.once('SIGINT', () => bot.stop('SIGINT'));
-process.once('SIGTERM', () => bot.stop('SIGTERM'));
-require("dotenv").config();
-mongoose
-  .connect(process.env.mongoURI)
-  .then(async () => {
-    console.log("✅ Успешное подключение к MongoDB");
 
-    // Убедимся, что индексы созданы правильно
-    await User.syncIndexes();
-
-    // Регистрация команд и событий
-    bot.start(commands.startCommand);
-    commands.buttonActions(bot);
-    bot.on("new_chat_members", events.userJoined);
-
-    bot.launch()
-      .then(() => console.log("✅ Бот запущен и работает!"))
-      .catch((err) => console.error("❌ Ошибка запуска бота:", err));
-  })
-  .catch((err) => {
-    console.error("❌ Ошибка подключения к MongoDB:", err);
-    process.exit(1); // Завершаем процесс при ошибке подключения
-  });
-
-// Обработка ошибок бота
-bot.catch((err) => {
-  console.error('❌ Ошибка Telegraf:', err);
-});
-
-// Graceful shutdown
 process.once('SIGINT', () => bot.stop('SIGINT'));
 process.once('SIGTERM', () => bot.stop('SIGTERM'));
