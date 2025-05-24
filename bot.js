@@ -18,11 +18,8 @@ bot.on('new_chat_members', events.userJoined);
 bot.launch()
     .then(() => console.log("✅ Бот запущен и работает!"))
     .catch(err => console.error("❌ Ошибка запуска:", err));
-const { Telegraf } = require("telegraf");
 require("dotenv").config();
 const mongoose = require("mongoose");
-const commands = require("./commands.js");
-const events = require("./events.js");
 const User = require("./models/user"); // Добавлен импорт модели
 
 const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
