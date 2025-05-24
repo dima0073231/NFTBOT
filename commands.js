@@ -2,7 +2,7 @@ const { Markup } = require("telegraf");
 const fs = require("fs");
 const User = require("./models/user");
 
-const appUrl = "https://danikkkkk12.github.io/nftbot/";
+const appUrl = "https://github.com/dima0073231/nftgo";
 const agreementUrl = "https://example.com/user-agreement";
 const imagePath = "./content/nft.png";
 

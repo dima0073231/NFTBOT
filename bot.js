@@ -9,7 +9,6 @@ if (!process.env.TELEGRAM_BOT_TOKEN) {
     process.exit(1);
 }
 
-const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
 
 bot.start(commands.startCommand);
 commands.buttonActions(bot);
