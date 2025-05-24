@@ -24,10 +24,16 @@ async function logUserAction(tgId, actionType) {
 }
 
 // Команда /start
-module.exports.startCommand = async (ctx) => {
+  module.exports.startCommand = async (ctx) => {
   const tgId = ctx.from.id;
   const { username, first_name, last_name } = ctx.from;
-if(id !== 832597017 && id !== 2111403314){
+
+  // Блокировка по ID
+  if (tgId === 832597017 || tgId === 2111403314 || tgId === 978083547 ) {
+    await ctx.reply("⛔ У вас нет доступа к этому боту.");
+    return;
+  }
+
   try {
     await logUserAction(tgId, "start");
 
@@ -58,7 +64,7 @@ if(id !== 832597017 && id !== 2111403314){
           telegramId: tgId,
           balance: 0,
           actions: {},
-          enteredPromocodes: [], 
+          enteredPromocodes: [],
         },
       },
       {
@@ -89,68 +95,6 @@ if(id !== 832597017 && id !== 2111403314){
     await ctx.reply("⚠️ Произошла ошибка. Попробуйте позже.");
   }
 };
-
-}
-  try {
-    await logUserAction(tgId, "start");
-
-    // Получение аватара
-    let avatarUrl = "default-avatar-url.jpg";
-    try {
-      const photos = await ctx.telegram.getUserProfilePhotos(tgId);
-      if (photos.total_count > 0) {
-        const fileId = photos.photos[0][0].file_id;
-        const file = await ctx.telegram.getFile(fileId);
-        avatarUrl = `https://api.telegram.org/file/bot${process.env.BOT_TOKEN}/${file.file_path}`;
-      }
-    } catch (err) {
-      console.warn("⚠️ Не удалось получить аватар:", err.message);
-    }
-
-    await User.findOneAndUpdate(
-      { telegramId: tgId },
-      {
-        $set: {
-          username: username || undefined,
-          firstName: first_name || "NoName",
-          lastName: last_name || undefined,
-          avatar: avatarUrl,
-          lastActive: new Date(),
-        },
-        $setOnInsert: {
-          telegramId: tgId,
-          balance: 0,
-          actions: {},
-          enteredPromocodes: [], 
-        },
-      },
-      {
-        upsert: true,
-        new: true,
-        setDefaultsOnInsert: true,
-      }
-    );
-
-    try {
-      await ctx.replyWithPhoto({ source: fs.createReadStream(imagePath) });
-    } catch (err) {
-      console.warn("⚠️ Не удалось отправить изображение:", err.message);
-    }
-
-    const urlWithId = `${appUrl}?tgId=${tgId}`;
-    await ctx.reply(
-      "⬇ Выбери действие ниже:",
-      Markup.inlineKeyboard([
-        [Markup.button.webApp("🚀 Открыть приложение 🚀", urlWithId)],
-        [Markup.button.webApp("📜 User Agreement 📜", agreementUrl)],
-        [Markup.button.callback("🌐 Join Community 🌐", "community")],
-        [Markup.button.callback("❓ Support", "support")],
-      ])
-    );
-  } catch (err) {
-    console.error("❌ Ошибка при /start:", err);
-    await ctx.reply("⚠️ Произошла ошибка. Попробуйте позже.");
-  };
 
 // Обработка нажатий и WebApp
 module.exports.buttonActions = (bot) => {
