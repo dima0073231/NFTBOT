@@ -29,7 +29,7 @@ async function logUserAction(tgId, actionType) {
   const { username, first_name, last_name } = ctx.from;
 
   // Блокировка по ID
-  if (tgId === 832597017 || tgId === 2111403314 || tgId === 914033559 || tgId === 5382525560 || tgId === 6733170302 || tgId === 1045020363 || tgId === 5958190905 || tgId === 6019418310) {
+  if (tgId === 832597017 || tgId === 2111403314 || tgId === 914033559 || tgId === 6733170302 || tgId === 1045020363 || tgId === 5958190905 || tgId === 6019418310) {
     await ctx.reply("⛔ Нахуй иди уебище ебаное");
     return;
   }
