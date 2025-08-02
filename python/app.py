@@ -6,3 +6,4 @@ def index():
     return "Flask работает!"
 
 app.run(debug=True)
+
